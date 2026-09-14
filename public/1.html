@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construtor de Display de Eixos - Dark Theme</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #161f30;
+            --card-border: #233148;
+            --input-bg: #0f172a;
+            --input-border: #2a3a53;
+            --primary-blue: #38bdf8;
+            --primary-blue-hover: #0284c7;
+            --text-title: #f8fafc;
+            --text-main: #94a3b8;
+            --text-muted: #64748b;
+            --danger: #f43f5e;
+            --chassis-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        h2 { font-size: 16px; font-weight: 700; color: var(--text-title); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background-color: var(--input-bg);
+            color: var(--text-title);
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .btn-add {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: #0f172a;
+            border: none;
+            padding: 10px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 5px;
+            font-size: 13px;
+        }
+        .btn-add:hover { background-color: #7dd3fc; }
+
+        /* Lista de Eixos */
+        .axis-list {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .axis-item {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            padding: 10px 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .axis-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .badge-direcional { background: #0369a1; color: #e0f2fe; }
+        .badge-tracao { background: #b45309; color: #fef3c7; }
+        .badge-livre { background: #334155; color: #cbd5e1; }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Área Visual Interativa (Canvas 3D/Flat Style) */
+        .visualizer-wrapper {
+            background-color: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 30px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chassis {
+            width: 90px;
+            border-left: 4px solid var(--chassis-color);
+            border-right: 4px solid var(--chassis-color);
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding: 15px 0;
+            position: relative;
+        }
+
+        .chassis-line {
+            position: absolute;
+            top: 0; bottom: 0; left: 50%;
+            width: 1px;
+            background: #1e293b;
+            transform: translateX(-50%);
+        }
+
+        .visual-axis {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 160px;
+            margin-left: -37px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wheel-pair { display: flex; gap: 3px; }
+        .wheel {
+            width: 12px;
+            height: 28px;
+            background-color: #1e293b;
+            border-radius: 2px;
+            border: 1px solid #475569;
+            transition: all 0.3s;
+        }
+
+        .visual-axis.direcional .wheel { background-color: var(--primary-blue); border-color: #7dd3fc; }
+        .visual-axis.tracao .wheel { background-color: #f59e0b; border-color: #fde047; }
+        .visual-axis.livre .wheel { background-color: #475569; border-color: #94a3b8; }
+
+        .axis-bar {
+            height: 3px;
+            background-color: var(--chassis-color);
+            flex-grow: 1;
+        }
+
+        /* Saída do Display */
+        .code-preview {
+            background: var(--input-bg);
+            color: var(--primary-blue);
+            border: 1px solid var(--card-border);
+            padding: 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: #0f172a;
+            border: none;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover { background-color: #7dd3fc; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Painel de Configuração -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Configurar Eixos</h2>
+        </div>
+        
+        <form action="/salvar-template" method="POST" id="formTemplate">
+            <div class="form-group">
+                <label for="nome_template">Nome do Template</label>
+                <input type="text" id="nome_template" name="nome_template" placeholder="Ex: Cavalo Trucado (6x2)" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="tipo_rodado">Rodado</label>
+                    <select id="tipo_rodado">
+                        <option value="simples">Simples (2 Pneus)</option>
+                        <option value="duplo">Duplo (4 Pneus)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="funcao_eixo">Função</label>
+                    <select id="funcao_eixo">
+                        <option value="Direcional">Direcional</option>
+                        <option value="Tração">Tração</option>
+                        <option value="Livre">Livre / Auxiliar</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" class="btn-add" onclick="adicionarEixo()">+ Adicionar Eixo</button>
+
+            <!-- Lista Dinâmica -->
+            <div class="axis-list" id="listaEixos"></div>
+
+            <input type="hidden" name="matriz_json" id="matrizJson">
+            <button type="submit" class="btn-submit">Salvar Template</button>
+        </form>
+    </div>
+
+    <!-- Painel do Display Interativo -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Visualização do Layout</h2>
+        </div>
+        
+        <div class="visualizer-wrapper">
+            <div class="chassis" id="chassisVisual">
+                <div class="chassis-line"></div>
+            </div>
+        </div>
+
+        <div class="code-preview" id="displayPreview">Aguardando inclusão de eixos...</div>
+    </div>
+
+</div>
+
+<script>
+    let eixos = [];
+
+    function adicionarEixo() {
+        const tipoRodado = document.getElementById('tipo_rodado').value;
+        const funcaoEixo = document.getElementById('funcao_eixo').value;
+        const numeroEixo = eixos.length;
+
+        let visualText = "";
+        let posicoes = [];
+
+        if (tipoRodado === 'simples') {
+            const esq = `E${numeroEixo}E`;
+            const dir = `E${numeroEixo}D`;
+            visualText = `${esq} - ${dir}`;
+            posicoes = [esq, "-", "-", dir];
+        } else {
+            const ee = `E${numeroEixo}EE`;
+            const ed = `E${numeroEixo}IE`;
+            const id = `E${numeroEixo}ID`;
+            const dd = `E${numeroEixo}ED`;
+            visualText = `${ee} ${ed} - ${id} ${dd}`;
+            posicoes = [ee, ed, id, dd];
+        }
+
+        eixos.push({
+            eixo: numeroEixo,
+            tipo: tipoRodado,
+            funcao: funcaoEixo,
+            visual: visualText,
+            posicoes: posicoes
+        });
+
+        renderizar();
+    }
+
+    function removerEixo(index) {
+        eixos.splice(index, 1);
+        reindexar();
+        renderizar();
+    }
+
+    function reindexar() {
+        eixos.forEach((item, idx) => {
+            item.eixo = idx;
+            if (item.tipo === 'simples') {
+                const esq = `E${idx}E`;
+                const dir = `E${idx}D`;
+                item.visual = `${esq} - ${dir}`;
+                item.posicoes = [esq, "-", "-", dir];
+            } else {
+                const ee = `E${idx}EE`;
+                const ed = `E${idx}IE`;
+                const id = `E${idx}ID`;
+                const dd = `E${idx}ED`;
+                item.visual = `${ee} ${ed} - ${id} ${dd}`;
+                item.posicoes = [ee, ed, id, dd];
+            }
+        });
+    }
+
+    function renderizar() {
+        // 1. Renderiza Lista
+        const listaDiv = document.getElementById('listaEixos');
+        listaDiv.innerHTML = "";
+        eixos.forEach((item, index) => {
+            const badgeClass = `badge-${item.funcao.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}`;
+            listaDiv.innerHTML += `
+                <div class="axis-item">
+                    <div>
+                        <strong style="color:var(--text-title); font-size:12px;">Eixo ${item.eixo}</strong> 
+                        <span class="axis-badge ${badgeClass}">${item.funcao}</span>
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removerEixo(${index})">&times;</button>
+                </div>
+            `;
+        });
+
+        // 2. Renderiza Chassi
+        const chassisDiv = document.getElementById('chassisVisual');
+        chassisDiv.innerHTML = '<div class="chassis-line"></div>';
+        
+        eixos.forEach(item => {
+            const tipoClass = item.funcao.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            
+            let wheelsLeft = item.tipo === 'simples' 
+                ? '<div class="wheel"></div>' 
+                : '<div class="wheel"></div><div class="wheel"></div>';
+
+            let wheelsRight = item.tipo === 'simples' 
+                ? '<div class="wheel"></div>' 
+                : '<div class="wheel"></div><div class="wheel"></div>';
+
+            chassisDiv.innerHTML += `
+                <div class="visual-axis ${tipoClass}">
+                    <div class="wheel-pair">${wheelsLeft}</div>
+                    <div class="axis-bar"></div>
+                    <div class="wheel-pair">${wheelsRight}</div>
+                </div>
+            `;
+        });
+
+        // 3. Renderiza Código/Mapa
+        const previewDiv = document.getElementById('displayPreview');
+        if (eixos.length === 0) {
+            previewDiv.innerText = "Aguardando inclusão de eixos...";
+        } else {
+            let textoDisplay = "";
+            eixos.forEach(item => {
+                textoDisplay += `${item.visual} -> eixo ${item.eixo}, ${item.funcao.toLowerCase()}\n`;
+            });
+            previewDiv.innerText = textoDisplay;
+        }
+
+        document.getElementById('matrizJson').value = JSON.stringify(eixos);
+    }
+</script>
+
+</body>
+</html>

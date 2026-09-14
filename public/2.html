@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Caminhão - Dark Theme</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #161f30;
+            --card-border: #233148;
+            --input-bg: #0f172a;
+            --input-border: #2a3a53;
+            --primary-blue: #38bdf8;
+            --primary-blue-hover: #7dd3fc;
+            --text-title: #f8fafc;
+            --text-main: #94a3b8;
+            --text-muted: #64748b;
+            --accent-green: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        h2 { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--text-title); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .form-group { margin-bottom: 16px; }
+        label { 
+            display: block; 
+            font-size: 11px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            margin-bottom: 6px; 
+            text-transform: uppercase; 
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background-color: var(--input-bg);
+            color: var(--text-title);
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+        @media (max-width: 600px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+
+        /* Card do Preview do Template Selecionado */
+        .template-preview-card {
+            background-color: var(--input-bg);
+            border: 1px dashed var(--primary-blue);
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .template-preview-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .template-preview-code {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--text-title);
+            white-space: pre-line;
+            line-height: 1.5;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover { 
+            background-color: var(--primary-blue-hover); 
+        }
+
+        /* Estilo para campos de arquivo */
+        input[type="file"]::file-selector-button {
+            background: var(--card-border);
+            border: none;
+            color: var(--text-title);
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Cadastro de Veículo</h2>
+        </div>
+
+        <form action="/salvar-caminhao" method="POST" enctype="multipart/form-data">
+            
+            <!-- Identificação -->
+            <div class="section-title">01. Identificação do Veículo</div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="placa">Placa*</label>
+                    <input type="text" id="placa" name="placa" placeholder="ABC1D23" maxlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label for="renavam">RENAVAM*</label>
+                    <input type="text" id="renavam" name="renavam" maxlength="11" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="chassi">Número do Chassi*</label>
+                <input type="text" id="chassi" name="chassi" placeholder="9BW ZZZ377 VT 000000" maxlength="17" required>
+            </div>
+
+            <!-- Template do Display de Rodas -->
+            <div class="section-title">02. Configuração do Display de Rodas</div>
+
+            <div class="form-group">
+                <label for="template_eixos_id">Template de Eixos*</label>
+                <select id="template_eixos_id" name="template_eixos_id" required onchange="atualizarPreview()">
+                    <option value="">Selecione o layout de rodas...</option>
+                    <option value="1" data-preview="E0E - E0D -> eixo 0, direcional&#10;E1EE E1IE - E1ID E1ED -> eixo 1, tração">Cavalo 4x2 (2 Eixos)</option>
+                    <option value="2" data-preview="E0E - E0D -> eixo 0, direcional&#10;E1EE E1IE - E1ID E1ED -> eixo 1, tração&#10;E2EE E2IE - E2ID E2ED -> eixo 2, livre">Cavalo 6x2 Trucado (3 Eixos)</option>
+                    <option value="3" data-preview="E0EE E0IE - E0ID E0ED -> eixo 0, livre&#10;E1EE E1IE - E1ID E1ED -> eixo 1, livre&#10;E2EE E2IE - E2ID E2ED -> eixo 2, livre">Carreta 3 Eixos (Semirreboque)</option>
+                </select>
+            </div>
+
+            <div class="template-preview-card" id="boxPreview">
+                <div class="template-preview-title">Estrutura do Layout Selecionado</div>
+                <div class="template-preview-code" id="textoPreview"></div>
+            </div>
+
+            <!-- Especificações Técnicas -->
+            <div class="section-title">03. Especificações Técnicas</div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="marca">Marca*</label>
+                    <input type="text" id="marca" name="marca" placeholder="Ex: Ford, Volvo, Scania" required>
+                </div>
+                <div class="form-group">
+                    <label for="modelo">Modelo*</label>
+                    <input type="text" id="modelo" name="modelo" placeholder="Ex: Cargo 816" required>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="ano_fab">Ano Fab.*</label>
+                    <input type="number" id="ano_fab" name="ano_fab" placeholder="2022" min="1950" max="2030" required>
+                </div>
+                <div class="form-group">
+                    <label for="ano_mod">Ano Mod.*</label>
+                    <input type="number" id="ano_mod" name="ano_mod" placeholder="2023" min="1950" max="2030" required>
+                </div>
+                <div class="form-group">
+                    <label for="km_inicial">KM Atual*</label>
+                    <input type="number" id="km_inicial" name="km_inicial" placeholder="45200" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="carroceria">Carroceria*</label>
+                    <select id="carroceria" name="carroceria" required>
+                        <option value="">Selecione...</option>
+                        <option value="trator">Cavalo Mecânico</option>
+                        <option value="bau">Baú</option>
+                        <option value="sider">Sider</option>
+                        <option value="graneleiro">Graneleiro</option>
+                        <option value="cacamba">Caçamba</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="combustivel">Combustível*</label>
+                    <select id="combustivel" name="combustivel" required>
+                        <option value="diesel">Diesel</option>
+                        <option value="gnv">Gás Natural (GNV)</option>
+                        <option value="eletrico">Elétrico</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Documentos e Mídia -->
+            <div class="section-title">04. Informações Adicionais</div>
+
+            <div class="form-group">
+                <label for="foto_veiculo">Foto do Veículo</label>
+                <input type="file" id="foto_veiculo" name="foto_veiculo" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="observacoes">Observações / Histórico</label>
+                <textarea id="observacoes" name="observacoes" rows="3" placeholder="Informações adicionais de manutenção ou restrições..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Salvar Veículo</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function atualizarPreview() {
+        const select = document.getElementById('template_eixos_id');
+        const option = select.options[select.selectedIndex];
+        const previewBox = document.getElementById('boxPreview');
+        const previewText = document.getElementById('textoPreview');
+
+        const previewData = option.getAttribute('data-preview');
+
+        if (previewData) {
+            previewText.innerText = previewData;
+            previewBox.style.display = 'block';
+        } else {
+            previewBox.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>

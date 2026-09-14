@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodízio e Movimentação de Pneus - Dark Theme</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #161f30;
+            --card-border: #233148;
+            --input-bg: #0f172a;
+            --input-border: #2a3a53;
+            --primary-blue: #38bdf8;
+            --primary-blue-hover: #7dd3fc;
+            --text-title: #f8fafc;
+            --text-main: #94a3b8;
+            --text-muted: #64748b;
+            --accent-orange: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 750px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        h2 { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--text-title); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 20px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        label { 
+            display: block; 
+            font-size: 11px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            margin-bottom: 6px; 
+            text-transform: uppercase; 
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background-color: var(--input-bg);
+            color: var(--text-title);
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* Box do Pneu Selecionado */
+        .pneu-info-card {
+            background-color: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--primary-blue);
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pneu-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pneu-info-item .label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .pneu-info-item .value {
+            font-size: 13px;
+            color: var(--text-title);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover { 
+            background-color: var(--primary-blue-hover); 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Rodízio & Movimentação de Pneus</h2>
+        </div>
+
+        <form action="/salvar-movimentacao" method="POST">
+            
+            <!-- 01. ORIGEM -->
+            <div class="section-title" style="margin-top:0;">01. Origem (Atual Posição)</div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="veiculo_origem">Veículo de Origem*</label>
+                    <select id="veiculo_origem" name="veiculo_origem" required onchange="carregarPneusOrigem()">
+                        <option value="">Selecione o veículo...</option>
+                        <option value="1">ABC1D23 - Cargo 816</option>
+                        <option value="2">XYZ9876 - FH 540</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="posicao_origem">Posição / Rodado Atual*</label>
+                    <select id="posicao_origem" name="posicao_origem" required onchange="atualizarInfoPneu()">
+                        <option value="">Selecione a posição...</option>
+                        <option value="E0E" data-fogo="PN-0042" data-marca="Michelin 295/80" data-sulco="12mm">E0E - Dianteiro Esquerdo</option>
+                        <option value="E0D" data-fogo="PN-0089" data-marca="Goodyear 295/80" data-sulco="10mm">E0D - Dianteiro Direito</option>
+                        <option value="E1EE" data-fogo="PN-0102" data-marca="Bridgestone 295/80" data-sulco="8mm">E1EE - Traseiro Ext. Esquerdo</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Card Informativo do Pneu Selecionado -->
+            <div class="pneu-info-card" id="cardPneuInfo">
+                <div class="pneu-info-item">
+                    <span class="label">Nº Fogo</span>
+                    <span class="value" id="infoFogo">PN-0042</span>
+                </div>
+                <div class="pneu-info-item">
+                    <span class="label">Marca / Medida</span>
+                    <span class="value" id="infoMarca">Michelin 295/80</span>
+                </div>
+                <div class="pneu-info-item">
+                    <span class="label">Sulco Atual</span>
+                    <span class="value" id="infoSulco" style="color: var(--primary-blue);">12.0 mm</span>
+                </div>
+            </div>
+
+            <!-- 02. DESTINO -->
+            <div class="section-title">02. Destino da Movimentação</div>
+
+            <div class="form-group">
+                <label for="tipo_movimentacao">Tipo de Operação*</label>
+                <select id="tipo_movimentacao" name="tipo_movimentacao" required onchange="alternarCamposDestino()">
+                    <option value="rodizio_mesmo">Rodízio no mesmo veículo</option>
+                    <option value="troca_veiculo">Transferir para outro veículo</option>
+                    <option value="estepe">Mover para Estepe</option>
+                    <option value="estoque">Desmontar para Estoque</option>
+                    <option value="recapagem">Enviar para Recapagem / Manutenção</option>
+                </select>
+            </div>
+
+            <div class="grid-2" id="boxDestinoVeiculo">
+                <div class="form-group">
+                    <label for="veiculo_destino">Veículo de Destino*</label>
+                    <select id="veiculo_destino" name="veiculo_destino">
+                        <option value="mesmo">Mesmo Veículo (ABC1D23)</option>
+                        <option value="2">XYZ9876 - FH 540</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="posicao_destino">Nova Posição / Rodado*</label>
+                    <select id="posicao_destino" name="posicao_destino">
+                        <option value="">Selecione o destino...</option>
+                        <option value="E0D">E0D - Dianteiro Direito</option>
+                        <option value="E1ED">E1ED - Traseiro Ext. Direito</option>
+                        <option value="ESTEPE">EST1 - Estepe</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 03. DADOS DA OPERAÇÃO -->
+            <div class="section-title">03. Detalhes do Lançamento</div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="km_troca">KM do Veículo no Momento*</label>
+                    <input type="number" id="km_troca" name="km_troca" placeholder="Ex: 45200" required>
+                </div>
+                <div class="form-group">
+                    <label for="motivo">Motivo da Movimentação*</label>
+                    <select id="motivo" name="motivo" required>
+                        <option value="preventivo">Rodízio Preventivo / Desgaste Regular</option>
+                        <option value="desgaste_irregular">Correção de Desgaste Irregular</option>
+                        <option value="furo_avaria">Furo / Avaria na Banda</option>
+                        <option value="fim_vida">Fim de Vida Útil / Reforma</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="observacoes">Observações do Borracheiro / Técnico</label>
+                <textarea id="observacoes" name="observacoes" rows="2" placeholder="Ex: Efetuado também o alinhamento do eixo dianteiro após a troca..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Confirmar Movimentação</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function atualizarInfoPneu() {
+        const select = document.getElementById('posicao_origem');
+        const option = select.options[select.selectedIndex];
+        
+        if (option.value) {
+            document.getElementById('infoFogo').innerText = option.getAttribute('data-fogo');
+            document.getElementById('infoMarca').innerText = option.getAttribute('data-marca');
+            document.getElementById('infoSulco').innerText = option.getAttribute('data-sulco');
+        }
+    }
+
+    function alternarCamposDestino() {
+        const tipo = document.getElementById('tipo_movimentacao').value;
+        const boxDestino = document.getElementById('boxDestinoVeiculo');
+
+        if (tipo === 'estoque' || tipo === 'recapagem') {
+            boxDestino.style.display = 'none';
+        } else {
+            boxDestino.style.display = 'grid';
+        }
+    }
+</script>
+
+</body>
+</html>
+

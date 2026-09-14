@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard CPK e Indicadores - Dark Theme</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #161f30;
+            --card-border: #233148;
+            --input-bg: #0f172a;
+            --input-border: #2a3a53;
+            --primary-blue: #38bdf8;
+            --text-title: #f8fafc;
+            --text-main: #94a3b8;
+            --text-muted: #64748b;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header-title {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h2 { 
+            font-size: 18px; 
+            font-weight: 700; 
+            color: var(--text-title); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        /* Grid de KPIs */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .kpi-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .kpi-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-title);
+            margin-top: 6px;
+        }
+
+        .kpi-subtext {
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+
+        /* Estrutura do Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tabela de Alertas */
+        .alert-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .alert-table th {
+            text-align: left;
+            color: var(--text-muted);
+            padding: 8px 6px;
+            border-bottom: 1px solid var(--card-border);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .alert-table td {
+            padding: 10px 6px;
+            border-bottom: 1px solid var(--input-bg);
+            color: var(--text-title);
+        }
+
+        .badge {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-danger { background-color: rgba(244, 63, 94, 0.2); color: var(--danger); }
+        .badge-warning { background-color: rgba(245, 158, 11, 0.2); color: var(--warning); }
+
+        /* Barras de Desempenho Visual */
+        .bar-container {
+            margin-bottom: 12px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-title);
+            margin-bottom: 4px;
+        }
+
+        .bar-bg {
+            background-color: var(--input-bg);
+            border-radius: 4px;
+            height: 8px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background-color: var(--primary-blue);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-title">
+        <h2>Dashboard & Custo por KM (CPK)</h2>
+        <span style="font-size: 11px; color: var(--text-muted);">Setembro / 2026</span>
+    </div>
+
+    <!-- CARTOES DE METRICAS (KPIS) -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-title">CPK Médio Frota</div>
+            <div class="kpi-value">R$ 0,042</div>
+            <div class="kpi-subtext text-success">▼ -3.2% vs mês anterior</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Total de Pneus Ativos</div>
+            <div class="kpi-value">128</div>
+            <div class="kpi-subtext text-title">86% em operação</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Alertas Críticos</div>
+            <div class="kpi-value text-danger">6</div>
+            <div class="kpi-subtext text-danger">Requer ação imediata</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-title">Investimento Mês</div>
+            <div class="kpi-value">R$ 8.450</div>
+            <div class="kpi-subtext text-title">12 Recapagens realizadas</div>
+        </div>
+    </div>
+
+    <!-- CONTEUDO PRINCIPAL -->
+    <div class="dashboard-grid">
+        
+        <!-- ALERTAS DA FROTA -->
+        <div class="card">
+            <div class="section-title">Pneus em Estado Crítico</div>
+            
+            <table class="alert-table">
+                <thead>
+                    <tr>
+                        <th>Pneu</th>
+                        <th>Placa / Pos</th>
+                        <th>Problema</th>
+                        <th>Medição</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>PN-0042</td>
+                        <td>ABC1D23 / E0E</td>
+                        <td><span class="badge badge-danger">Careca</span></td>
+                        <td>1.8 mm</td>
+                        <td>Trocar</td>
+                    </tr>
+                    <tr>
+                        <td>PN-0089</td>
+                        <td>XYZ9876 / E1EE</td>
+                        <td><span class="badge badge-warning">Pressão Baixa</span></td>
+                        <td>82 PSI</td>
+                        <td>Calibrar</td>
+                    </tr>
+                    <tr>
+                        <td>PN-0102</td>
+                        <td>ABC1D23 / E1ID</td>
+                        <td><span class="badge badge-danger">Corte Banda</span></td>
+                        <td>Avaria F.</td>
+                        <td>Manutenção</td>
+                    </tr>
+                    <tr>
+                        <td>PN-0055</td>
+                        <td>KMS4500 / E0D</td>
+                        <td><span class="badge badge-warning">Desgaste Irreg.</span></td>
+                        <td>3.1 mm</td>
+                        <td>Alinhar</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- RANKING DE MARCAS (DESEMPENHO) -->
+        <div class="card">
+            <div class="section-title">CPK por Marca (Menor Custo)</div>
+
+            <div class="bar-container">
+                <div class="bar-label">
+                    <span>Michelin</span>
+                    <span class="text-success">R$ 0,038 / km</span>
+                </div>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: 90%;"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <div class="bar-label">
+                    <span>Bridgestone</span>
+                    <span class="text-success">R$ 0,041 / km</span>
+                </div>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: 82%;"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <div class="bar-label">
+                    <span>Goodyear</span>
+                    <span>R$ 0,045 / km</span>
+                </div>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: 70%;"></div>
+                </div>
+            </div>
+
+            <div class="bar-container">
+                <div class="bar-label">
+                    <span>Pirelli</span>
+                    <span class="text-danger">R$ 0,052 / km</span>
+                </div>
+                <div class="bar-bg">
+                    <div class="bar-fill" style="width: 55%; background-color: var(--danger);"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

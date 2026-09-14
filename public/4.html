@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de CRLV - Dark Theme</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --card-bg: #161f30;
+            --card-border: #233148;
+            --input-bg: #0f172a;
+            --input-border: #2a3a53;
+            --primary-blue: #38bdf8;
+            --primary-blue-hover: #7dd3fc;
+            --text-title: #f8fafc;
+            --text-main: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 650px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 12px;
+        }
+
+        h2 { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--text-title); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--card-border);
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        label { 
+            display: block; 
+            font-size: 11px; 
+            font-weight: 600; 
+            color: var(--text-muted); 
+            margin-bottom: 6px; 
+            text-transform: uppercase; 
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background-color: var(--input-bg);
+            color: var(--text-title);
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+        @media (max-width: 600px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover { 
+            background-color: var(--primary-blue-hover); 
+        }
+
+        input[type="file"]::file-selector-button {
+            background: var(--card-border);
+            border: none;
+            color: var(--text-title);
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Lançamento de CRLV-e</h2>
+        </div>
+
+        <form action="/salvar-crlv" method="POST" enctype="multipart/form-data">
+            
+            <!-- Vínculo do Veículo -->
+            <div class="section-title">01. Veículo Associado</div>
+            
+            <div class="form-group">
+                <label for="caminhao_id">Selecione o Caminhão / Veículo*</label>
+                <select id="caminhao_id" name="caminhao_id" required>
+                    <option value="">Selecione o veículo...</option>
+                    <option value="1">ABC1D23 - Cargo 816</option>
+                    <option value="2">XYZ9876 - FH 540</option>
+                </select>
+            </div>
+
+            <!-- Dados do Documento -->
+            <div class="section-title">02. Dados do Documento (CRLV)</div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="exercicio">Ano Exercício (Licenciamento)*</label>
+                    <input type="number" id="exercicio" name="exercicio" placeholder="2026" min="2020" max="2035" required>
+                </div>
+                <div class="form-group">
+                    <label for="numero_crlv">Número do CRLV-e / Espelho*</label>
+                    <input type="text" id="numero_crlv" name="numero_crlv" placeholder="01234567890" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="codigo_seguranca">Código de Segurança do CLA*</label>
+                    <input type="text" id="codigo_seguranca" name="codigo_seguranca" placeholder="000000000" required>
+                </div>
+                <div class="form-group">
+                    <label for="uf_veiculo">UF do Licenciamento*</label>
+                    <select id="uf_veiculo" name="uf_veiculo" required>
+                        <option value="">Selecione...</option>
+                        <option value="SP">São Paulo (SP)</option>
+                        <option value="RJ">Rio de Janeiro (RJ)</option>
+                        <option value="MG">Minas Gerais (MG)</option>
+                        <option value="PR">Paraná (PR)</option>
+                        <option value="SC">Santa Catarina (SC)</option>
+                        <option value="RS">Rio Grande do Sul (RS)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Proprietário e Categoria -->
+            <div class="section-title">03. Proprietário e Categoria</div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="nome_proprietario">Nome do Proprietário / Razão Social*</label>
+                    <input type="text" id="nome_proprietario" name="nome_proprietario" placeholder="Ex: Logística Brasil LTDA" required>
+                </div>
+                <div class="form-group">
+                    <label for="documento_proprietario">CPF / CNPJ do Proprietário*</label>
+                    <input type="text" id="documento_proprietario" name="documento_proprietario" placeholder="00.000.000/0001-00" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="categoria">Categoria*</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="aluguel">Aluguel (Placa Vermelha / Mercosul)</option>
+                        <option value="particular">Particular</option>
+                        <option value="oficial">Oficial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rntrc">Nº RNTRC (ANTT)</label>
+                    <input type="text" id="rntrc" name="rntrc" placeholder="Ex: 123456789">
+                </div>
+            </div>
+
+            <!-- Anexo Digital -->
+            <div class="section-title">04. Documento Digital / PDF</div>
+
+            <div class="form-group">
+                <label for="arquivo_crlv">Anexar CRLV-e (PDF ou Imagem)*</label>
+                <input type="file" id="arquivo_crlv" name="arquivo_crlv" accept=".pdf,image/*" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Salvar Registro CRLV</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

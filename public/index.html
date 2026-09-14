@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/bundle.js"></script>
+  </body>
+  <script>
+    // listar arquivos html dentro de 'public' em root
+    const root = document.getElementById('root');
+    for ( i = 0; i < 10; i++ ) {
+      const link = document.createElement('a');
+      link.href = `${i}.html`;
+      link.textContent = `File ${i}`;
+      root.appendChild(link);
+      root.appendChild(document.createElement('br'));
+    }
+  </script>
+</html>
