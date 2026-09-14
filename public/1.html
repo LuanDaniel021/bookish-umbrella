@@ -242,7 +242,7 @@
             <h2>Configurar Eixos</h2>
         </div>
         
-        <form action="/salvar-template" method="POST" id="formTemplate">
+        <form action="/salvar-template" method="POST" id="formTemplate" data-api-endpoint="/caminhoes">
             <div class="form-group">
                 <label for="nome_template">Nome do Template</label>
                 <input type="text" id="nome_template" name="nome_template" placeholder="Ex: Cavalo Trucado (6x2)" required>
@@ -412,5 +412,6 @@
     }
 </script>
 
+<script type="module" src="/js/api.js"></script>
 </body>
 </html>

@@ -183,7 +183,7 @@
             <h2>Cadastro de Veículo</h2>
         </div>
 
-        <form action="/salvar-caminhao" method="POST" enctype="multipart/form-data">
+        <form action="/salvar-caminhao" method="POST" enctype="multipart/form-data" data-api-endpoint="/caminhoes">
             
             <!-- Identificação -->
             <div class="section-title">01. Identificação do Veículo</div>
@@ -309,5 +309,6 @@
     }
 </script>
 
+<script type="module" src="/js/api.js"></script>
 </body>
 </html>
