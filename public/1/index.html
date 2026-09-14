@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construtor de Display de Eixos - Dark Theme</title>
+    <link href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Painel de Configuração -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Configurar Eixos</h2>
+        </div>
+        
+        <form action="/salvar-template" method="POST" id="formTemplate" data-api-endpoint="/caminhoes">
+            <div class="form-group">
+                <label for="nome_template">Nome do Template</label>
+                <input type="text" id="nome_template" name="nome_template" placeholder="Ex: Cavalo Trucado (6x2)" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="tipo_rodado">Rodado</label>
+                    <select id="tipo_rodado">
+                        <option value="simples">Simples (2 Pneus)</option>
+                        <option value="duplo">Duplo (4 Pneus)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="funcao_eixo">Função</label>
+                    <select id="funcao_eixo">
+                        <option value="Direcional">Direcional</option>
+                        <option value="Tração">Tração</option>
+                        <option value="Livre">Livre / Auxiliar</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="button" class="btn-add" onclick="adicionarEixo()">+ Adicionar Eixo</button>
+
+            <!-- Lista Dinâmica -->
+            <div class="axis-list" id="listaEixos"></div>
+
+            <input type="hidden" name="matriz_json" id="matrizJson">
+            <button type="submit" class="btn-submit">Salvar Template</button>
+        </form>
+    </div>
+
+    <!-- Painel do Display Interativo -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Visualização do Layout</h2>
+        </div>
+        
+        <div class="visualizer-wrapper">
+            <div class="chassis" id="chassisVisual">
+                <div class="chassis-line"></div>
+            </div>
+        </div>
+
+        <div class="code-preview" id="displayPreview">Aguardando inclusão de eixos...</div>
+    </div>
+
+</div>
+
+<script>
+    let eixos = [];
+
+    function adicionarEixo() {
+        const tipoRodado = document.getElementById('tipo_rodado').value;
+        const funcaoEixo = document.getElementById('funcao_eixo').value;
+        const numeroEixo = eixos.length;
+
+        let visualText = "";
+        let posicoes = [];
+
+        if (tipoRodado === 'simples') {
+            const esq = `E${numeroEixo}E`;
+            const dir = `E${numeroEixo}D`;
+            visualText = `${esq} - ${dir}`;
+            posicoes = [esq, "-", "-", dir];
+        } else {
+            const ee = `E${numeroEixo}EE`;
+            const ed = `E${numeroEixo}IE`;
+            const id = `E${numeroEixo}ID`;
+            const dd = `E${numeroEixo}ED`;
+            visualText = `${ee} ${ed} - ${id} ${dd}`;
+            posicoes = [ee, ed, id, dd];
+        }
+
+        eixos.push({
+            eixo: numeroEixo,
+            tipo: tipoRodado,
+            funcao: funcaoEixo,
+            visual: visualText,
+            posicoes: posicoes
+        });
+
+        renderizar();
+    }
+
+    function removerEixo(index) {
+        eixos.splice(index, 1);
+        reindexar();
+        renderizar();
+    }
+
+    function reindexar() {
+        eixos.forEach((item, idx) => {
+            item.eixo = idx;
+            if (item.tipo === 'simples') {
+                const esq = `E${idx}E`;
+                const dir = `E${idx}D`;
+                item.visual = `${esq} - ${dir}`;
+                item.posicoes = [esq, "-", "-", dir];
+            } else {
+                const ee = `E${idx}EE`;
+                const ed = `E${idx}IE`;
+                const id = `E${idx}ID`;
+                const dd = `E${idx}ED`;
+                item.visual = `${ee} ${ed} - ${id} ${dd}`;
+                item.posicoes = [ee, ed, id, dd];
+            }
+        });
+    }
+
+    function renderizar() {
+        // 1. Renderiza Lista
+        const listaDiv = document.getElementById('listaEixos');
+        listaDiv.innerHTML = "";
+        eixos.forEach((item, index) => {
+            const badgeClass = `badge-${item.funcao.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "")}`;
+            listaDiv.innerHTML += `
+                <div class="axis-item">
+                    <div>
+                        <strong style="color:var(--text-title); font-size:12px;">Eixo ${item.eixo}</strong> 
+                        <span class="axis-badge ${badgeClass}">${item.funcao}</span>
+                    </div>
+                    <button type="button" class="btn-remove" onclick="removerEixo(${index})">&times;</button>
+                </div>
+            `;
+        });
+
+        // 2. Renderiza Chassi
+        const chassisDiv = document.getElementById('chassisVisual');
+        chassisDiv.innerHTML = '<div class="chassis-line"></div>';
+        
+        eixos.forEach(item => {
+            const tipoClass = item.funcao.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            
+            let wheelsLeft = item.tipo === 'simples' 
+                ? '<div class="wheel"></div>' 
+                : '<div class="wheel"></div><div class="wheel"></div>';
+
+            let wheelsRight = item.tipo === 'simples' 
+                ? '<div class="wheel"></div>' 
+                : '<div class="wheel"></div><div class="wheel"></div>';
+
+            chassisDiv.innerHTML += `
+                <div class="visual-axis ${tipoClass}">
+                    <div class="wheel-pair">${wheelsLeft}</div>
+                    <div class="axis-bar"></div>
+                    <div class="wheel-pair">${wheelsRight}</div>
+                </div>
+            `;
+        });
+
+        // 3. Renderiza Código/Mapa
+        const previewDiv = document.getElementById('displayPreview');
+        if (eixos.length === 0) {
+            previewDiv.innerText = "Aguardando inclusão de eixos...";
+        } else {
+            let textoDisplay = "";
+            eixos.forEach(item => {
+                textoDisplay += `${item.visual} -> eixo ${item.eixo}, ${item.funcao.toLowerCase()}\n`;
+            });
+            previewDiv.innerText = textoDisplay;
+        }
+
+        document.getElementById('matrizJson').value = JSON.stringify(eixos);
+    }
+</script>
+
+<script type="module" src="/js/api.js"></script>
+</body>
+</html>

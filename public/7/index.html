@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspeção Rápida de Pneus - Mobile / Dark Theme</title>
+    <link href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Aferição Rápida de Campo</h2>
+        </div>
+
+        <form action="/salvar-inspecao" method="POST" enctype="multipart/form-data" data-api-endpoint="/medicao-pneus">
+            
+            <!-- 01. SELEÇÃO DO VEÍCULO -->
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="veiculo_id">Veículo / Placa*</label>
+                    <select id="veiculo_id" name="veiculo_id" required onchange="carregarRodas()">
+                        <option value="">Selecione...</option>
+                        <option value="1">ABC1D23 - Cargo 816</option>
+                        <option value="2">XYZ9876 - FH 540</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="km_atual">KM Atual*</label>
+                    <input type="number" id="km_atual" name="km_atual" placeholder="45200" required>
+                </div>
+            </div>
+
+            <!-- 02. SELETOR DE RODA -->
+            <div class="section-title">02. Selecione a Roda para Aferir</div>
+
+            <div class="wheel-selector-grid">
+                <div class="wheel-btn active" onclick="selecionarRoda('E0E', 'PN-0042')">
+                    <span class="code">E0E</span>
+                    <span class="fogo">PN-0042</span>
+                    <span class="status-dot status-ok"></span>
+                </div>
+                <div class="wheel-btn" onclick="selecionarRoda('E0D', 'PN-0089')">
+                    <span class="code">E0D</span>
+                    <span class="fogo">PN-0089</span>
+                    <span class="status-dot status-warn"></span>
+                </div>
+                <div class="wheel-btn" onclick="selecionarRoda('E1EE', 'PN-0102')">
+                    <span class="code">E1EE</span>
+                    <span class="fogo">PN-0102</span>
+                    <span class="status-dot status-ok"></span>
+                </div>
+                <div class="wheel-btn" onclick="selecionarRoda('E1IE', 'PN-0105')">
+                    <span class="code">E1IE</span>
+                    <span class="fogo">PN-0105</span>
+                    <span class="status-dot status-danger"></span>
+                </div>
+            </div>
+
+            <!-- 03. FORMULÁRIO DE MEDIÇÃO DA RODA SELECIONADA -->
+            <div class="measurement-box">
+                <div class="active-wheel-header">
+                    <span class="active-wheel-title" id="rodaAtivaTitulo">Roda: E0E (Dianteira Esquerda)</span>
+                    <span style="font-size: 11px; color: var(--text-title);" id="rodaAtivaFogo">Pneu: PN-0042</span>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="pressao">Pressão Lida (PSI)*</label>
+                        <input type="number" id="pressao" name="pressao" placeholder="105" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sulco_menor">Sulco Mínimo (mm)*</label>
+                        <input type="number" step="0.1" id="sulco_menor" name="sulco_menor" placeholder="12.0" required>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="estado_banda">Condição da Banda*</label>
+                        <select id="estado_banda" name="estado_banda" required>
+                            <option value="normal">Normal / Regular</option>
+                            <option value="desgaste_irregular">Desgaste Irregular</option>
+                            <option value="corte_avaria">Corte / Avaria</option>
+                            <option value="objeto_cravado">Objeto Cravado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="foto_avaria">Foto do Pneu / Avaria</label>
+                        <input type="file" id="foto_avaria" name="foto_avaria" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="observacao_inspecao">Observações do Inspetor</label>
+                <textarea id="observacao_inspecao" name="observacao_inspecao" rows="2" placeholder="Observações adicionais ou recomendação de alinhamento..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Registrar Aferição</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function selecionarRoda(codigo, fogo) {
+        document.querySelectorAll('.wheel-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        document.getElementById('rodaAtivaTitulo').innerText = `Roda: ${codigo}`;
+        document.getElementById('rodaAtivaFogo').innerText = `Pneu: ${fogo}`;
+    }
+</script>
+
+<script type="module" src="/js/api.js"></script>
+</body>
+</html>
