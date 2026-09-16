@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Gerenciamento de Usuários - Admin</title>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header-title">
+        <div>
+            <h1>Gerenciamento de Usuários</h1>
+            <div class="subtitle">Controle de contas, permissões e status de acesso ao sistema de frotas</div>
+        </div>
+        <button class="btn btn-primary" onclick="abrirModal()">+ Novo Usuário</button>
+    </div>
+
+    <!-- CARDS DE MÉTRICAS -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="label">Total de Usuários</div>
+            <div class="value">24</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Usuários Ativos</div>
+            <div class="value" style="color: var(--success);">20</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Pendentes / Novos</div>
+            <div class="value" style="color: var(--warning);">3</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Bloqueados</div>
+            <div class="value" style="color: var(--danger);">1</div>
+        </div>
+    </div>
+
+    <!-- TABELA DE USUÁRIOS -->
+    <div class="card">
+        <div class="table-toolbar">
+            <div class="search-box">
+                <input type="text" class="filter-input" placeholder="Buscar por nome, e-mail ou cargo...">
+                <select class="filter-input" style="width: 160px;">
+                    <option value="all">Todos Perfis</option>
+                    <option value="gestor">Gestores</option>
+                    <option value="borracheiro">Borracheiros</option>
+                    <option value="motorista">Motoristas</option>
+                </select>
+            </div>
+            <select class="filter-input" style="width: 150px;">
+                <option value="all">Todos Status</option>
+                <option value="active">Ativos</option>
+                <option value="pending">Pendentes</option>
+                <option value="blocked">Bloqueados</option>
+            </select>
+        </div>
+
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Perfil de Acesso</th>
+                    <th>Último Acesso</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- LINHA 1 -->
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar">CE</div>
+                            <div class="user-details">
+                                <span class="user-name">Carlos Eduardo</span>
+                                <span class="user-email">carlos.eduardo@empresa.com</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="role-tag">Gestor / Admin</span></td>
+                    <td>16/09/2026 14:10</td>
+                    <td><span class="badge badge-active">Ativo</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-action" onclick="editarUsuario('Carlos Eduardo', 'carlos.eduardo@empresa.com', 'gestor')">Editar</button>
+                            <button class="btn btn-action" onclick="resetSenha('Carlos Eduardo')">Senha</button>
+                            <button class="btn btn-danger" onclick="bloquearUsuario('Carlos Eduardo')">Bloquear</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- LINHA 2 -->
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" style="color: var(--warning);">MT</div>
+                            <div class="user-details">
+                                <span class="user-name">Mariana Torres</span>
+                                <span class="user-email">mariana.torres@empresa.com</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="role-tag">Inspetora / Borracheira</span></td>
+                    <td>15/09/2026 09:30</td>
+                    <td><span class="badge badge-active">Ativo</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-action" onclick="editarUsuario('Mariana Torres', 'mariana.torres@empresa.com', 'borracheiro')">Editar</button>
+                            <button class="btn btn-action" onclick="resetSenha('Mariana Torres')">Senha</button>
+                            <button class="btn btn-danger" onclick="bloquearUsuario('Mariana Torres')">Bloquear</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- LINHA 3 -->
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" style="color: var(--success);">RL</div>
+                            <div class="user-details">
+                                <span class="user-name">Roberto Lima</span>
+                                <span class="user-email">roberto.lima@empresa.com</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="role-tag">Motorista</span></td>
+                    <td>14/09/2026 18:45</td>
+                    <td><span class="badge badge-pending">Pendente</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-action" style="background-color: var(--success); color: #000;" onclick="ativarUsuario('Roberto Lima')">Ativar</button>
+                            <button class="btn btn-action" onclick="editarUsuario('Roberto Lima', 'roberto.lima@empresa.com', 'motorista')">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- LINHA 4 -->
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" style="color: var(--danger);">FS</div>
+                            <div class="user-details">
+                                <span class="user-name">Fernando Souza</span>
+                                <span class="user-email">fernando.souza@empresa.com</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="role-tag">Motorista</span></td>
+                    <td>01/08/2026 11:20</td>
+                    <td><span class="badge badge-blocked">Bloqueado</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-action" onclick="desbloquearUsuario('Fernando Souza')">Desbloquear</button>
+                            <button class="btn btn-action" onclick="editarUsuario('Fernando Souza', 'fernando.souza@empresa.com', 'motorista')">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- MODAL DE CADASTRO E EDIÇÃO -->
+<div class="modal-overlay" id="modalUsuario">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitulo">Novo Usuário</h3>
+            <button class="close-modal" onclick="fecharModal()">✕</button>
+        </div>
+
+        <form action="/salvar-usuario" method="POST">
+            <div class="form-group">
+                <label for="usr_nome">Nome Completo*</label>
+                <input type="text" id="usr_nome" name="nome" placeholder="Ex: João da Silva" required>
+            </div>
+
+            <div class="form-group">
+                <label for="usr_email">E-mail*</label>
+                <input type="email" id="usr_email" name="email" placeholder="usuario@empresa.com" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="usr_perfil">Perfil de Acesso*</label>
+                    <select id="usr_perfil" name="perfil" required>
+                        <option value="gestor">Gestor / Admin</option>
+                        <option value="borracheiro">Inspetor / Borracheiro</option>
+                        <option value="motorista">Motorista</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="usr_status">Status Inicial*</label>
+                    <select id="usr_status" name="status" required>
+                        <option value="active">Ativo</option>
+                        <option value="pending">Pendente</option>
+                        <option value="blocked">Bloqueado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="usr_senha">Senha Provisória*</label>
+                <input type="password" id="usr_senha" name="senha" placeholder="••••••••">
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn btn-action" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar Usuário</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function abrirModal() {
+        document.getElementById('modalTitulo').innerText = 'Novo Usuário';
+        document.getElementById('usr_nome').value = '';
+        document.getElementById('usr_email').value = '';
+        document.getElementById('modalUsuario').classList.add('active');
+    }
+
+    function editarUsuario(nome, email, perfil) {
+        document.getElementById('modalTitulo').innerText = 'Editar Usuário';
+        document.getElementById('usr_nome').value = nome;
+        document.getElementById('usr_email').value = email;
+        document.getElementById('usr_perfil').value = perfil;
+        document.getElementById('modalUsuario').classList.add('active');
+    }
+
+    function fecharModal() {
+        document.getElementById('modalUsuario').classList.remove('active');
+    }
+
+    function bloquearUsuario(nome) {
+        if (confirm(`Tem certeza que deseja bloquear o usuário ${nome}?`)) {
+            alert(`Usuário ${nome} foi bloqueado.`);
+        }
+    }
+
+    function desbloquearUsuario(nome) {
+        alert(`Acesso do usuário ${nome} foi reestabelecido.`);
+    }
+
+    function ativarUsuario(nome) {
+        alert(`Usuário ${nome} foi ativado com sucesso!`);
+    }
+
+    function resetSenha(nome) {
+        alert(`Um link de redefinição de senha foi enviado para ${nome}.`);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário - Dark Theme</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- BARRA SUPERIOR -->
+    <div class="top-nav">
+        <div class="brand">
+            <div class="brand-icon">F</div>
+            <span>FleetSys</span>
+        </div>
+        <div class="top-nav-actions">
+            <button class="icon-btn">🔍</button>
+            <div class="mini-avatar">CE</div>
+        </div>
+    </div>
+
+    <!-- CAPA E FOTO -->
+    <div class="cover-container"></div>
+
+    <div class="profile-header">
+        <div class="avatar-wrapper">
+            <div class="profile-avatar">CE</div>
+            <div class="profile-actions">
+                <button class="btn-icon-action" title="Editar Perfil">✏️</button>
+                <button class="btn-icon-action" title="Opções">•••</button>
+            </div>
+        </div>
+
+        <div class="user-names">
+            <div class="fullname">CARLOS EDUARDO</div>
+            <div class="handle">@carlos.eduardo</div>
+            <span class="user-role-badge">Supervisão de Logística</span>
+        </div>
+
+        <!-- ABAS DE NAVEGAÇÃO -->
+        <div class="profile-tabs">
+            <div class="tab-item active" onclick="switchTab('atividades')">Atividades</div>
+            <div class="tab-item" onclick="switchTab('veiculos')">Veículos</div>
+            <div class="tab-item" onclick="switchTab('info')">Info</div>
+            <div class="tab-item" onclick="switchTab('historico')">Histórico</div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DA ABA SELECIONADA -->
+    <div id="tab-atividades" class="tab-content active">
+        <div class="empty-state">
+            Nenhuma atividade recente registrada para este usuário.
+        </div>
+    </div>
+
+    <div id="tab-veiculos" class="tab-content">
+        <div class="empty-state">
+            Nenhum veículo vinculado diretamente.
+        </div>
+    </div>
+
+    <div id="tab-info" class="tab-content">
+        <div class="empty-state">
+            Informações do perfil e departamento.
+        </div>
+    </div>
+
+    <div id="tab-historico" class="tab-content">
+        <div class="empty-state">
+            Histórico de acessos e movimentações.
+        </div>
+    </div>
+
+    <!-- BARRA DE NAVEGAÇÃO INFERIOR -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <span class="icon">🏠</span>
+            <span>Início</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon">🚚</span>
+            <span>Frota</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon">🔍</span>
+            <span>Inspeção</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <span class="icon">👤</span>
+            <span>Perfil</span>
+        </a>
+    </div>
+
+</div>
+
+<script>
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        event.currentTarget.classList.add('active');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+    }
+</script>
+
+</body>
+</html>

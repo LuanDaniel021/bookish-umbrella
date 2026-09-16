@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Aprovação de Regras de Autenticação - Admin</title>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header-title">
+        <div>
+            <h1>Aprovação de Regras de Autenticação</h1>
+            <div class="subtitle">Análise de solicitações de novas políticas de acesso e segurança enviados pelos usuários</div>
+        </div>
+    </div>
+
+    <!-- CARDS DE METRICAS -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="label">Pendentes</div>
+            <div class="value" style="color: var(--warning);">3</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Aprovadas (Este Mês)</div>
+            <div class="value" style="color: var(--success);">12</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Rejeitadas (Este Mês)</div>
+            <div class="value" style="color: var(--danger);">2</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">Total de Regras Ativas</div>
+            <div class="value">18</div>
+        </div>
+    </div>
+
+    <!-- TABELA DE SOLICITAÇÕES -->
+    <div class="card">
+        <div class="table-filters">
+            <input type="text" class="filter-input" placeholder="Buscar por usuário, regra ou motivo..." style="width: 300px;">
+            <select class="filter-input">
+                <option value="all">Todos os Status</option>
+                <option value="pending" selected>Apenas Pendentes</option>
+                <option value="approved">Aprovados</option>
+                <option value="rejected">Rejeitados</option>
+            </select>
+        </div>
+
+        <table class="requests-table">
+            <thead>
+                <tr>
+                    <th>Solicitante</th>
+                    <th>Tipo de Regra Solicitada</th>
+                    <th>Motivo / Justificativa</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Ações do ADM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- LINHA 1 - PENDENTE -->
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">Carlos Eduardo</span>
+                            <span class="user-role">Supervisão de Logística</span>
+                        </div>
+                    </td>
+                    <td><span class="tag-rule">MFA / 2FA Obrigatório</span></td>
+                    <td>Aumento de segurança para acesso de operadores terceirizados.</td>
+                    <td>16/09/2026</td>
+                    <td><span class="badge badge-pending">Pendente</span></td>
+                    <td style="text-align: right;">
+                        <div class="action-btns" style="justify-content: flex-end;">
+                            <button class="btn btn-approve" onclick="aprovar('SOL-001')">Aprovar</button>
+                            <button class="btn btn-reject" onclick="rejeitar('SOL-001')">Rejeitar</button>
+                            <button class="btn btn-details" onclick="abrirModal('Carlos Eduardo', 'MFA / 2FA Obrigatório', 'Aumento de segurança para acesso de operadores terceirizados em dispositivos móveis no pátio.')">Ver</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- LINHA 2 - PENDENTE -->
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">Mariana Torres</span>
+                            <span class="user-role">Analista de TI</span>
+                        </div>
+                    </td>
+                    <td><span class="tag-rule">Restrição por Faixa IP</span></td>
+                    <td>Limitar acesso do módulo de relatórios ao IP da VPN corporativa.</td>
+                    <td>15/09/2026</td>
+                    <td><span class="badge badge-pending">Pendente</span></td>
+                    <td style="text-align: right;">
+                        <div class="action-btns" style="justify-content: flex-end;">
+                            <button class="btn btn-approve" onclick="aprovar('SOL-002')">Aprovar</button>
+                            <button class="btn btn-reject" onclick="rejeitar('SOL-002')">Rejeitar</button>
+                            <button class="btn btn-details" onclick="abrirModal('Mariana Torres', 'Restrição por Faixa IP', 'Bloquear login direto da internet no portal financeiro, exigindo IP fixo 192.168.10.0/24.')">Ver</button>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- LINHA 3 - APROVADO -->
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">Roberto Lima</span>
+                            <span class="user-role">Gerente de Frotas</span>
+                        </div>
+                    </td>
+                    <td><span class="tag-rule">SAML 2.0 / SSO</span></td>
+                    <td>Integração do login com a conta do Azure AD / Microsoft 365.</td>
+                    <td>10/09/2026</td>
+                    <td><span class="badge badge-approved">Aprovado</span></td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-details" onclick="abrirModal('Roberto Lima', 'SAML 2.0 / SSO', 'Integração completa com Microsoft Azure AD para Single Sign-On dos motoristas.')">Ver Detalhes</button>
+                    </td>
+                </tr>
+
+                <!-- LINHA 4 - REJEITADO -->
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <span class="user-name">Fernando Souza</span>
+                            <span class="user-role">Borracheiro Chefe</span>
+                        </div>
+                    </td>
+                    <td><span class="tag-rule">Desativar Exp. Senha</span></td>
+                    <td>Solicitou para não expirar a senha a cada 90 dias no tablet do pátio.</td>
+                    <td>08/09/2026</td>
+                    <td><span class="badge badge-rejected">Rejeitado</span></td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-details" onclick="abrirModal('Fernando Souza', 'Desativar Exp. Senha', 'Solicitação violava as políticas gerais de segurança da informação da empresa.')">Ver Detalhes</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- MODAL DE ANÁLISE E DETALHES -->
+<div class="modal-overlay" id="modalSolicitacao">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Detalhes da Solicitação</h3>
+            <button class="close-modal" onclick="fecharModal()">✕</button>
+        </div>
+
+        <div class="detail-group">
+            <div class="detail-label">Solicitante</div>
+            <div class="detail-value" id="modalUsuario">-</div>
+        </div>
+
+        <div class="detail-group">
+            <div class="detail-label">Regra Solicitada</div>
+            <div class="detail-value" id="modalRegra">-</div>
+        </div>
+
+        <div class="detail-group">
+            <div class="detail-label">Justificativa Completa</div>
+            <div class="detail-value" id="modalJustificativa" style="min-height: 60px;">-</div>
+        </div>
+
+        <div class="detail-group">
+            <div class="detail-label">Parecer / Observação do Administrador</div>
+            <textarea class="modal-reason" rows="3" placeholder="Digite uma observação (obrigatório em caso de rejeição)..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+            <button class="btn btn-reject" style="padding: 10px 16px;" onclick="fecharModal()">Rejeitar Solicitação</button>
+            <button class="btn btn-approve" style="padding: 10px 16px;" onclick="fecharModal()">Aprovar e Aplicar Regra</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function aprovar(id) {
+        alert('Solicitação ' + id + ' APROVADA com sucesso! A nova regra de autenticação foi aplicada.');
+    }
+
+    function rejeitar(id) {
+        let motivo = prompt("Informe o motivo da rejeição:");
+        if (motivo) {
+            alert('Solicitação ' + id + ' REJEITADA. Motivo registrado.');
+        }
+    }
+
+    function abrirModal(usuario, regra, justificativa) {
+        document.getElementById('modalUsuario').innerText = usuario;
+        document.getElementById('modalRegra').innerText = regra;
+        document.getElementById('modalJustificativa').innerText = justificativa;
+        document.getElementById('modalSolicitacao').classList.add('active');
+    }
+
+    function fecharModal() {
+        document.getElementById('modalSolicitacao').classList.remove('active');
+    }
+</script>
+
+</body>
+</html>
